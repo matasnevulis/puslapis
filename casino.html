@@ -120,7 +120,7 @@
     <h1>matruleta</h1>
     <div class="roulette-wheel">
       <div id="wheel" class="wheel">0</div>
-      <button id="spin-btn">Sik</button>
+      <button id="spin-btn">Suk</button>
     </div>
     <div class="betting-area">
       <h2>kiek</h2>
@@ -210,9 +210,9 @@
             winnings *= 2; // Red/Black pays 2:1
           }
           balance += winnings;
-          resultDisplay.textContent = `You win $${winnings}!`;
+          resultDisplay.textContent = `laimejai $${winnings}!`;
         } else {
-          resultDisplay.textContent = 'You lose!';
+          resultDisplay.textContent = 'prapisai!';
         }
 
         updateBalance();
