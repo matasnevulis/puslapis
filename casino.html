@@ -1,1 +1,200 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ruleta</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .roulette-container {
+      text-align: center;
+      background-color: #34495e;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .roulette-wheel {
+      margin-bottom: 20px;
+    }
+
+    .wheel {
+      width: 200px;
+      height: 200px;
+      background-color: #e74c3c;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      margin: 0 auto 10px;
+    }
+
+    #spin-btn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #3498db;
+      border: none;
+      color: white;
+      border-radius: 5px;
+    }
+
+    #spin-btn:hover {
+      background-color: #2980b9;
+    }
+
+    .betting-area {
+      margin-top: 20px;
+    }
+
+    .bet-options {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .bet-option {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      background-color: #27ae60;
+      border: none;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .bet-option:hover {
+      background-color: #219653;
+    }
+
+    #bet-amount {
+      padding: 10px;
+      font-size: 1rem;
+      width: 100%;
+      max-width: 200px;
+      margin-bottom: 10px;
+    }
+
+    #result {
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
+
+    #balance {
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="roulette-container">
+    <h1>Roulette Game</h1>
+    <div class="roulette-wheel">
+      <div id="wheel" class="wheel">0</div>
+      <button id="spin-btn">Spin</button>
+    </div>
+    <div class="betting-area">
+      <h2>Place Your Bet</h2>
+      <input type="number" id="bet-amount" placeholder="Bet Amount" min="1">
+      <div class="bet-options">
+        <button class="bet-option" data-bet="red">Red</button>
+        <button class="bet-option" data-bet="black">Black</button>
+        <button class="bet-option" data-bet="green">Green</button>
+      </div>
+      <p id="result"></p>
+      <p id="balance">Balance: $1000</p>
+    </div>
+  </div>
+  <script>
+    let balance = 1000;
+    let betAmount = 0;
+    let betType = null;
+
+    const wheel = document.getElementById('wheel');
+    const spinBtn = document.getElementById('spin-btn');
+    const betAmountInput = document.getElementById('bet-amount');
+    const resultDisplay = document.getElementById('result');
+    const balanceDisplay = document.getElementById('balance');
+    const betOptions = document.querySelectorAll('.bet-option');
+
+    // Update balance display
+    function updateBalance() {
+      balanceDisplay.textContent = `Balance: $${balance}`;
+    }
+
+    // Handle bet selection
+    betOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        betType = option.getAttribute('data-bet');
+        betOptions.forEach(btn => btn.classList.remove('active'));
+        option.classList.add('active');
+      });
+    });
+
+    // Spin the wheel
+    spinBtn.addEventListener('click', () => {
+      const amount = parseInt(betAmountInput.value);
+      if (isNaN(amount) || amount < 1 || amount > balance) {
+        alert('Invalid bet amount!');
+        return;
+      }
+      if (!betType) {
+        alert('Please select a bet type!');
+        return;
+      }
+
+      betAmount = amount;
+      balance -= betAmount;
+      updateBalance();
+
+      // Simulate spinning the wheel
+      const spinResult = Math.floor(Math.random() * 37); // 0-36
+      wheel.textContent = spinResult;
+
+      // Determine if the player wins
+      let win = false;
+      if (betType === 'red' && spinResult !== 0 && spinResult % 2 === 1) {
+        win = true;
+      } else if (betType === 'black' && spinResult !== 0 && spinResult % 2 === 0) {
+        win = true;
+      } else if (betType === 'green' && spinResult === 0) {
+        win = true;
+      }
+
+      // Calculate winnings
+      if (win) {
+        let winnings = betAmount;
+        if (betType === 'green') {
+          winnings *= 35; // Green pays 35:1
+        } else {
+          winnings *= 2; // Red/Black pays 2:1
+        }
+        balance += winnings;
+        resultDisplay.textContent = `You win $${winnings}!`;
+      } else {
+        resultDisplay.textContent = 'You lose!';
+      }
+
+      updateBalance();
+      betAmountInput.value = '';
+      betOptions.forEach(btn => btn.classList.remove('active'));
+      betType = null;
+    });
+  </script>
+</body>
+</html>
