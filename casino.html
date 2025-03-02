@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ruleta</title>
+  <title>Ruleta</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -41,6 +40,21 @@
       font-weight: bold;
       color: white;
       margin: 0 auto 10px;
+      position: relative;
+    }
+
+    /* Spinning animation */
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(3600deg); /* Spin 10 times */
+      }
+    }
+
+    .spinning {
+      animation: spin 3s ease-out; /* 3 seconds spinning */
     }
 
     #spin-btn {
@@ -103,21 +117,21 @@
 </head>
 <body>
   <div class="roulette-container">
-    <h1>Roulette Game</h1>
+    <h1>matruleta</h1>
     <div class="roulette-wheel">
       <div id="wheel" class="wheel">0</div>
-      <button id="spin-btn">Spin</button>
+      <button id="spin-btn">Sik</button>
     </div>
     <div class="betting-area">
-      <h2>Place Your Bet</h2>
+      <h2>kiek</h2>
       <input type="number" id="bet-amount" placeholder="Bet Amount" min="1">
       <div class="bet-options">
-        <button class="bet-option" data-bet="red">Red</button>
-        <button class="bet-option" data-bet="black">Black</button>
-        <button class="bet-option" data-bet="green">Green</button>
+        <button class="bet-option" data-bet="red">raudonas</button>
+        <button class="bet-option" data-bet="black">juodas</button>
+        <button class="bet-option" data-bet="green">zalias</button>
       </div>
       <p id="result"></p>
-      <p id="balance">Balance: $1000</p>
+      <p id="balance">pinigai: $1000</p>
     </div>
   </div>
   <script>
@@ -162,38 +176,53 @@
       balance -= betAmount;
       updateBalance();
 
+      // Disable spin button during animation
+      spinBtn.disabled = true;
+
+      // Add spinning animation
+      wheel.classList.add('spinning');
+
       // Simulate spinning the wheel
-      const spinResult = Math.floor(Math.random() * 37); // 0-36
-      wheel.textContent = spinResult;
+      setTimeout(() => {
+        // Stop spinning animation
+        wheel.classList.remove('spinning');
 
-      // Determine if the player wins
-      let win = false;
-      if (betType === 'red' && spinResult !== 0 && spinResult % 2 === 1) {
-        win = true;
-      } else if (betType === 'black' && spinResult !== 0 && spinResult % 2 === 0) {
-        win = true;
-      } else if (betType === 'green' && spinResult === 0) {
-        win = true;
-      }
+        // Generate a random result
+        const spinResult = Math.floor(Math.random() * 37); // 0-36
+        wheel.textContent = spinResult;
 
-      // Calculate winnings
-      if (win) {
-        let winnings = betAmount;
-        if (betType === 'green') {
-          winnings *= 35; // Green pays 35:1
-        } else {
-          winnings *= 2; // Red/Black pays 2:1
+        // Determine if the player wins
+        let win = false;
+        if (betType === 'red' && spinResult !== 0 && spinResult % 2 === 1) {
+          win = true;
+        } else if (betType === 'black' && spinResult !== 0 && spinResult % 2 === 0) {
+          win = true;
+        } else if (betType === 'green' && spinResult === 0) {
+          win = true;
         }
-        balance += winnings;
-        resultDisplay.textContent = `You win $${winnings}!`;
-      } else {
-        resultDisplay.textContent = 'You lose!';
-      }
 
-      updateBalance();
-      betAmountInput.value = '';
-      betOptions.forEach(btn => btn.classList.remove('active'));
-      betType = null;
+        // Calculate winnings
+        if (win) {
+          let winnings = betAmount;
+          if (betType === 'green') {
+            winnings *= 35; // Green pays 35:1
+          } else {
+            winnings *= 2; // Red/Black pays 2:1
+          }
+          balance += winnings;
+          resultDisplay.textContent = `You win $${winnings}!`;
+        } else {
+          resultDisplay.textContent = 'You lose!';
+        }
+
+        updateBalance();
+        betAmountInput.value = '';
+        betOptions.forEach(btn => btn.classList.remove('active'));
+        betType = null;
+
+        // Re-enable spin button
+        spinBtn.disabled = false;
+      }, 3000); // Match the duration of the animation (3 seconds)
     });
   </script>
 </body>
