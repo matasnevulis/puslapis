@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ruleta</title>
+  <title>ruleta</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -40,21 +40,6 @@
       font-weight: bold;
       color: white;
       margin: 0 auto 10px;
-      position: relative;
-    }
-
-    /* Spinning animation */
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(3600deg); /* Spin 10 times */
-      }
-    }
-
-    .spinning {
-      animation: spin 3s ease-out; /* 3 seconds spinning */
     }
 
     #spin-btn {
@@ -131,7 +116,7 @@
         <button class="bet-option" data-bet="green">zalias</button>
       </div>
       <p id="result"></p>
-      <p id="balance">pinigai: $1000</p>
+      <p id="balance">pinigas: $1000</p>
     </div>
   </div>
   <script>
@@ -146,12 +131,12 @@
     const balanceDisplay = document.getElementById('balance');
     const betOptions = document.querySelectorAll('.bet-option');
 
-    // Update balance display
+    // bilanso updejtas
     function updateBalance() {
       balanceDisplay.textContent = `Balance: $${balance}`;
     }
 
-    // Handle bet selection
+    // an ko stato
     betOptions.forEach(option => {
       option.addEventListener('click', () => {
         betType = option.getAttribute('data-bet');
@@ -160,15 +145,15 @@
       });
     });
 
-    // Spin the wheel
+    // sukimas rato
     spinBtn.addEventListener('click', () => {
       const amount = parseInt(betAmountInput.value);
       if (isNaN(amount) || amount < 1 || amount > balance) {
-        alert('Invalid bet amount!');
+        alert('xd!');
         return;
       }
       if (!betType) {
-        alert('Please select a bet type!');
+        alert('an ko statai?');
         return;
       }
 
@@ -176,53 +161,38 @@
       balance -= betAmount;
       updateBalance();
 
-      // Disable spin button during animation
-      spinBtn.disabled = true;
+      // simulacija
+      const spinResult = Math.floor(Math.random() * 37); // 0-36
+      wheel.textContent = spinResult;
 
-      // Add spinning animation
-      wheel.classList.add('spinning');
+      // cikrina ar laimejo
+      let win = false;
+      if (betType === 'red' && spinResult !== 0 && spinResult % 2 === 1) {
+        win = true;
+      } else if (betType === 'black' && spinResult !== 0 && spinResult % 2 === 0) {
+        win = true;
+      } else if (betType === 'green' && spinResult === 0) {
+        win = true;
+      }
 
-      // Simulate spinning the wheel
-      setTimeout(() => {
-        // Stop spinning animation
-        wheel.classList.remove('spinning');
-
-        // Generate a random result
-        const spinResult = Math.floor(Math.random() * 37); // 0-36
-        wheel.textContent = spinResult;
-
-        // Determine if the player wins
-        let win = false;
-        if (betType === 'red' && spinResult !== 0 && spinResult % 2 === 1) {
-          win = true;
-        } else if (betType === 'black' && spinResult !== 0 && spinResult % 2 === 0) {
-          win = true;
-        } else if (betType === 'green' && spinResult === 0) {
-          win = true;
-        }
-
-        // Calculate winnings
-        if (win) {
-          let winnings = betAmount;
-          if (betType === 'green') {
-            winnings *= 35; // Green pays 35:1
-          } else {
-            winnings *= 2; // Red/Black pays 2:1
-          }
-          balance += winnings;
-          resultDisplay.textContent = `laimejai $${winnings}!`;
+      // kalkuluoja kiek laimejo
+      if (win) {
+        let winnings = betAmount;
+        if (betType === 'green') {
+          winnings *= 35; // zalias moka 35:1
         } else {
-          resultDisplay.textContent = 'prapisai!';
+          winnings *= 2; // raudonas/juodas moka 2:1
         }
+        balance += winnings;
+        resultDisplay.textContent = `laimejai $${winnings}!`;
+      } else {
+        resultDisplay.textContent = 'prapisai!';
+      }
 
-        updateBalance();
-        betAmountInput.value = '';
-        betOptions.forEach(btn => btn.classList.remove('active'));
-        betType = null;
-
-        // Re-enable spin button
-        spinBtn.disabled = false;
-      }, 3000); // Match the duration of the animation (3 seconds)
+      updateBalance();
+      betAmountInput.value = '';
+      betOptions.forEach(btn => btn.classList.remove('active'));
+      betType = null;
     });
   </script>
 </body>
