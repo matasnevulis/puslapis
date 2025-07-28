@@ -34,14 +34,14 @@ nav {
 }
 
 .logo {
-  max-width: 100px;
+  max-width: 12rem;
 }
 
 .link {
   position: relative;
   padding-bottom: 0.75rem;
   color: #2e3105;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
 }
 
@@ -60,40 +60,56 @@ nav {
   width: 100%;
 }
 
-/* Mobile specific styles */
+.video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  max-width: 90%;
+  width: 100%;
+}
+
+.video-container video {
+  width: 100%;
+  max-height: 80vh;
+  height: auto;
+}
+
+/* Mobile */
 @media screen and (max-width: 768px) {
   nav {
+    position: static; 
+    transform: none; 
     flex-direction: column;
-    align-items: center; 
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    align-items: center;
+    padding: 1rem;
     width: 100%;
+    max-width: 100%;
   }
 
   .nav-logo {
-    display: none;
+    display: block; 
+    max-width: 12rem;
+    margin-bottom: 1rem;
   }
 
   .nav-links {
-    display: flex;
     flex-direction: column;
+    gap: 1rem;
     width: 100%;
-    align-items: center; /* Center the links */
-    gap: 1rem; /* Adjust gap for vertical layout */
-  }
-
-  .nav-links.active {
-    display: flex;
   }
 
   .link {
     padding: 0.5rem 0;
   }
 
-  /* Hide the logo when the menu is active to save space */
-  .nav-links.active ~ .nav-logo {
-    display: none;
+ 
+  .video-container {
+    margin-top: 2rem; 
+    padding: 0 1rem; 
+  }
+
+  .video-container video {
+    max-height: none; 
   }
 }
